@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Evaluación de Perfil de Investigación</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    background-color: #f4f6f9;
+}
+h1 {
+    text-align: center;
+}
+.question {
+    margin-bottom: 15px;
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 20px;
+}
+.result {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+}
+</style>
+</head>
+<body>
+
+<h1>Evaluación de Perfil de Investigación</h1>
+
+<form id="quizForm">
+
+<div id="questions"></div>
+
+<button type="button" onclick="calcularPerfil()">Ver Resultado</button>
+
+</form>
+
+<div class="result" id="resultado"></div>
+
+<script>
+
+const preguntas = [
+"1. Sé buscar información en fuentes académicas confiables.",
+"2. Puedo identificar cuándo una fuente no es confiable.",
+"3. Analizo críticamente la información antes de incluirla en un trabajo.",
+"4. Me siento cómodo trabajando con datos numéricos y estadísticas.",
+"5. Sé organizar información en herramientas digitales.",
+"6. Redacto textos claros y bien estructurados.",
+"7. Me siento seguro exponiendo resultados.",
+"8. Cumplo con fechas de entrega sin recordatorios.",
+"9. Tomo iniciativa cuando el equipo no avanza.",
+"10. Prefiero coordinar y organizar el trabajo del equipo."
+];
+
+const contenedor = document.getElementById("questions");
+
+preguntas.forEach((texto, index) => {
+    let div = document.createElement("div");
+    div.classList.add("question");
+    div.innerHTML = `<p>${texto}</p>` +
+        [1,2,3,4,5].map(num =>
+            `<label>
+                <input type="radio" name="q${index}" value="${num}" required> ${num}
+             </label>`
+        ).join(" ");
+    contenedor.appendChild(div);
+});
+
+function calcularPerfil() {
+    let respuestas = [];
+    for (let i = 0; i < preguntas.length; i++) {
+        let valor = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!valor) {
+            alert("Responde todas las preguntas.");
+            return;
+        }
+        respuestas.push(parseInt(valor.value));
+    }
+
+    let investigador = (respuestas[0] + respuestas[1] + respuestas[2]) / 3;
+    let analitico = (respuestas[3] + respuestas[4]) / 2;
+    let comunicador = (respuestas[5] + respuestas[6]) / 2;
+    let responsable = respuestas[7];
+    let lider = (respuestas[8] + respuestas[9]) / 2;
+
+    let perfiles = {
+        "Perfil Investigador": investigador,
+        "Perfil Analítico": analitico,
+        "Perfil Comunicador": comunicador,
+        "Perfil Responsable": responsable,
+        "Perfil Líder": lider
+    };
+
+    let perfilFinal = Object.keys(perfiles).reduce((a, b) => perfiles[a] > perfiles[b] ? a : b);
+
+    document.getElementById("resultado").innerHTML =
+        "Tu perfil predominante es: " + perfilFinal;
+}
+
+</script>
+
+</body>
+</html>
